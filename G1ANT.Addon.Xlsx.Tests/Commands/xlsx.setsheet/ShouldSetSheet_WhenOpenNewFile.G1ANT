@@ -1,0 +1,13 @@
+﻿addon xlsx version 2.205.17304.1000
+
+♥folderPath = ♥environment⟦TEMP⟧\
+♥filePath = ♥folderPath + "TempTestDebug.xlsx"
+
+file.delete ♥filePath
+xlsx.open path ♥filePath createifnotexist true
+xlsx.close
+xlsx.open path ♥filePath accessmode readwrite
+xlsx.setsheet ‴Sheet 1‴ result ♥res
+xlsx.close
+file.delete ♥filePath
+test ⊂♥res != false⊃

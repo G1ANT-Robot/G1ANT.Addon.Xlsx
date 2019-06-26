@@ -1,0 +1,30 @@
+﻿addon xlsx version 2.205.17304.1000
+
+♥folderPath = ♥environment⟦TEMP⟧\
+♥filePath1 = ♥folderPath + "TempTestDebug1.xlsx"
+♥filePath2 = ♥folderPath + "TempTestDebug2.xlsx"
+♥filePath3 = ♥folderPath + "TempTestDebug3.xlsx"
+♥filePath4 = ♥folderPath + "TempTestDebug4.xlsx"
+
+file.delete ♥filePath1
+file.delete ♥filePath2
+file.delete ♥filePath3
+file.delete ♥filePath4
+xlsx.open path ♥filePath1 createifnotexist true result ♥fileHandle1
+xlsx.open path ♥filePath2 createifnotexist true result ♥fileHandle2
+xlsx.open path ♥filePath3 createifnotexist true result ♥fileHandle3
+xlsx.open path ♥filePath4 createifnotexist true result ♥fileHandle4
+
+xlsx.switch ♥fileHandle1 result ♥res1 
+xlsx.close
+xlsx.switch ♥fileHandle2 result ♥res2
+xlsx.close
+xlsx.switch ♥fileHandle3 result ♥res3
+xlsx.close
+xlsx.switch ♥fileHandle4 result ♥res4
+xlsx.close
+file.delete ♥filePath1
+file.delete ♥filePath2
+file.delete ♥filePath3
+file.delete ♥filePath4
+test ⊂♥res1 != false && ♥res2 != false && ♥res3 != false && ♥res4 != false⊃

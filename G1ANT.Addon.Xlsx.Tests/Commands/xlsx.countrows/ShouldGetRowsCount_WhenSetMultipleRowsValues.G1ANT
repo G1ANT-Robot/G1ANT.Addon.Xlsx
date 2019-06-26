@@ -1,0 +1,23 @@
+﻿addon xlsx version 2.205.17304.1000
+
+♥filePath = ♥environment⟦TEMP⟧\TempTestDebug.xlsx
+♥testValue = ‴ABC‴
+
+file.delete ♥filePath
+
+xlsx.open path ♥filePath createifnotexist true
+xlsx.close
+
+xlsx.open path ♥filePath accessmode readwrite 
+♥i = 4
+while condition ⊂♥i > 0⊃
+    xlsx.setvalue value ♥testValue row ♥i colindex 1
+    ♥i = ♥i - 1
+end while
+xlsx.close
+
+xlsx.open path ♥filePath accessmode readwrite   
+xlsx.countrows result ♥rowCount
+xlsx.close
+file.delete ♥filePath
+test ⊂♥rowCount == 4⊃

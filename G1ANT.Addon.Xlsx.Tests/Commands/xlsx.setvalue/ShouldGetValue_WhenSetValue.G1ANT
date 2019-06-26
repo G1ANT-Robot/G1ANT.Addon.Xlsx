@@ -1,0 +1,17 @@
+﻿addon xlsx version 2.205.17304.1000
+
+♥filePath = ♥environment⟦TEMP⟧\TempTestDebug.xlsx
+♥testValue = ‴ABC‴
+
+file.delete ♥filePath
+xlsx.open path ♥filePath createifnotexist true
+xlsx.close
+xlsx.open path ♥filePath accessmode readwrite   
+xlsx.setvalue value ♥testValue row 2 colindex 2 result ♥res1
+xlsx.close
+test ⊂♥res1 != false⊃
+xlsx.open path ♥filePath accessmode readwrite   
+xlsx.getvalue row 2 colindex 2 result ♥res2
+xlsx.close
+file.delete ♥filePath
+test ⊂♥testValue == ♥res2⊃

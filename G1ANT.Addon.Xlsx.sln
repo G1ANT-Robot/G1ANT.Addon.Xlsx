@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Addon.Xlsx", "G1ANT.Addon.Xlsx\G1ANT.Addon.Xlsx.csproj", "{1314487E-1C64-478A-8163-FFCD4C526F65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Addon.Xlsx.Tests", "G1ANT.Addon.Xlsx.Tests\G1ANT.Addon.Xlsx.Tests.csproj", "{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		AutomatedDebug|Any CPU = AutomatedDebug|Any CPU
+		Debug (.Net 4.0)|Any CPU = Debug (.Net 4.0)|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release (.Net 4.0)|Any CPU = Release (.Net 4.0)|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.AutomatedDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.AutomatedDebug|Any CPU.Build.0 = Debug|Any CPU
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.Debug (.Net 4.0)|Any CPU.ActiveCfg = Debug|Any CPU
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.Debug (.Net 4.0)|Any CPU.Build.0 = Debug|Any CPU
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.Release (.Net 4.0)|Any CPU.ActiveCfg = Release|Any CPU
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.Release (.Net 4.0)|Any CPU.Build.0 = Release|Any CPU
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1314487E-1C64-478A-8163-FFCD4C526F65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.AutomatedDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.AutomatedDebug|Any CPU.Build.0 = Debug|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Debug (.Net 4.0)|Any CPU.ActiveCfg = Debug|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Debug (.Net 4.0)|Any CPU.Build.0 = Debug|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Release (.Net 4.0)|Any CPU.ActiveCfg = Release|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Release (.Net 4.0)|Any CPU.Build.0 = Release|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26D1A627-AA6A-444B-956E-FA70B6D3CAB1}
+	EndGlobalSection
+EndGlobal

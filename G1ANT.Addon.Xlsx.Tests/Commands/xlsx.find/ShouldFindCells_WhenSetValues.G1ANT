@@ -1,0 +1,33 @@
+﻿addon xlsx version 2.205.17304.1000
+
+♥filePath = ♥environment⟦TEMP⟧\TempTestDebug.xlsx
+♥testValue1 = ‴ABC‴
+♥testValue2 = 123
+♥testValue3 = ‴123%‴
+♥testValue4 = 0.123
+
+file.delete ♥filePath
+
+xlsx.open path ♥filePath createifnotexist true
+xlsx.close
+
+xlsx.open path ♥filePath accessmode readwrite   
+xlsx.setvalue value ♥testValue1 row 1 colindex 4 result ♥res1
+xlsx.setvalue value ♥testValue2 row 2 colindex 3 result ♥res2
+xlsx.setvalue value ♥testValue3 row 3 colindex 2 result ♥res3
+xlsx.setvalue value ♥testValue4 row 4 colindex 1 result ♥res4
+xlsx.close
+test ⊂♥res1 != false && ♥res2 != false && ♥res3 != false && ♥res4 != false⊃
+
+xlsx.open path ♥filePath accessmode readwrite
+xlsx.find ♥testValue1 resultrow ♥resrow1 resultcolumn ♥resCol1
+test condition ⊂♥resrow1 == 1 && ♥resCol1 == 4⊃
+xlsx.find ♥testValue2 resultrow ♥resrow2 resultcolumn ♥resCol2
+test condition ⊂♥resrow2 == 2 && ♥resCol2 == 3⊃
+xlsx.find ♥testValue3 resultrow ♥resrow3 resultcolumn ♥resCol3
+test condition ⊂♥resrow3 == 3 && ♥resCol3 == 2⊃
+xlsx.find ♥testValue4 resultrow ♥resrow4 resultcolumn ♥resCol4
+test condition ⊂♥resrow4 == 4 && ♥resCol4 == 1⊃
+xlsx.close
+
+file.delete ♥filePath

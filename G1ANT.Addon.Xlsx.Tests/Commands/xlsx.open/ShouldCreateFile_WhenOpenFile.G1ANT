@@ -1,0 +1,18 @@
+﻿addon xlsx version 2.205.17304.1000
+
+♥filePath = ♥environment⟦TEMP⟧\TempTestDebug.xlsx
+
+file.delete ♥filePath
+xlsx.open path ♥filePath createifnotexist true
+xlsx.close
+file.exists ♥filePath timeout 100    
+file.delete ♥filePath 
+try errorcall testSucceeded    
+    xlsx.open path ♥filePath
+    xlsx.close
+    call testFailed
+end try
+
+procedure testSucceeded
+    test condition yes
+end procedure
