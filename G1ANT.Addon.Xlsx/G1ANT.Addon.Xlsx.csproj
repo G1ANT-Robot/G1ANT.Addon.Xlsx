@@ -41,9 +41,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\G1ANT.Bin\debug\G1ANT.Language.dll</HintPath>
     </Reference>
-    <Reference Include="GitVersionCore, Version=3.6.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GitVersion.3.6.5\lib\Net45\GitVersionCore.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
