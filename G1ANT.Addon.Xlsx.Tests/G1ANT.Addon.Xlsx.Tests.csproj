@@ -33,24 +33,39 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.9.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.9.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.4.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.4\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="G1ANT.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\G1ANT.Bin\debug\G1ANT.Engine.dll</HintPath>
     </Reference>
-    <Reference Include="G1ANT.Language, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\G1ANT.Bin\debug\G1ANT.Language.dll</HintPath>
+    <Reference Include="G1ANT.Language, Version=4.98.18332.1321, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\G1ANT.Language.1.0.2\lib\net452\G1ANT.Language.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.6.11.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.6.11\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit, Version=2.1.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.2.1.2\lib\net45\MailKit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="MimeKit, Version=2.1.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.2.1.2\lib\net45\MimeKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -88,6 +103,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Commands\xlsx.close\ShouldCloseFile_WhenOpenFile.G1ANT" />
     <None Include="Commands\xlsx.setsheet\ShouldSetSheet_WhenOpenNewFile.G1ANT" />
     <None Include="Commands\xlsx.countrows\ShouldGetRowsCount_WhenSetMultipleRowsValues.G1ANT" />
