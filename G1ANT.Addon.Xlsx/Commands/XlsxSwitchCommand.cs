@@ -20,7 +20,7 @@ namespace G1ANT.Addon.Xlsx
             [Argument(Required = true, Tooltip = "ID of an opened file to switch to")]
             public IntegerStructure Id { get; set; } = new IntegerStructure(0);
 
-            [Argument(Tooltip = "Name of a variable where the command's result will be stored: : `true` if it succeeded, `false` if it did not")]
+            [Argument(Tooltip = "Name of a variable where the command's result will be stored: `true` if it succeeded, `false` if it did not")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public XlsxSwitchCommand(AbstractScripter scripter) : base(scripter)
