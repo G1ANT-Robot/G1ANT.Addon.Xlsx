@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Xlsx
 *    www.g1ant.com
@@ -12,15 +12,15 @@ using G1ANT.Language;
 
 namespace G1ANT.Addon.Xlsx
 {
-    [Command(Name = "xlsx.setsheet", Tooltip = "This command allows to set active sheet to work with.")]
+    [Command(Name = "xlsx.setsheet", Tooltip = "This command sets a specified sheet as active")]
     public class XlsxSetSheetCommand : Command
     {
         public  class Arguments : CommandArguments
         {
-            [Argument]
+            [Argument(Tooltip = "Name of a sheet to be set as active. If it’s not specified, the robot will activate the first sheet in the file")]
             public TextStructure Name { get; set; } = new TextStructure(string.Empty);
 
-            [Argument]
+            [Argument(Tooltip = "Name of a variable where the command's result will be stored: `true` if it succeeded, `false` if it did not")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public XlsxSetSheetCommand(AbstractScripter scripter) : base(scripter)

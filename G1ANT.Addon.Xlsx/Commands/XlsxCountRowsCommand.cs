@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Xlsx
 *    www.g1ant.com
@@ -11,12 +11,12 @@ using G1ANT.Language;
 
 namespace G1ANT.Addon.Xlsx
 {
-    [Command(Name = "xlsx.countrows",Tooltip = "This command allows to count rows in open .xlsx file.")]
+    [Command(Name = "xlsx.countrows",Tooltip = "This command counts rows in an open .xls(x) file")]
     public class XlsxCountRowsCommand : Command
     {
         public class Arguments : CommandArguments
         {
-            [Argument]
+            [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public XlsxCountRowsCommand(AbstractScripter scripter) : base(scripter)
