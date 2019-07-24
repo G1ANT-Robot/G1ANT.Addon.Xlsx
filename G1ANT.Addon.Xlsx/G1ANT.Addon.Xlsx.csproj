@@ -71,6 +71,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ColumnNamesGenerator.cs" />
     <Compile Include="Api\UriFixer.cs" />
     <Compile Include="Api\XlsxManager.cs" />
     <Compile Include="Api\XlsxWrapper.cs" />
