@@ -13,15 +13,63 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
-using System.IO.Compression;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Linq;
 using DocumentFormat.OpenXml;
+using System.Windows.Forms;
+using System.Text;
 
-namespace G1ANT.Addon.Xlsx
+namespace G1ANT.Addon.Xlsx.Api
 {
+    public class ColumnNamesGenerator
+    {
+        private readonly char[] letters;
+        private readonly string[] columnNames;
+
+        public ColumnNamesGenerator()
+        {
+            letters = Enumerable.Range(0, 26).Select(x => (char)(x + 64)).ToArray();
+            columnNames = Enumerable
+                .Range(0, ushort.MaxValue)
+                .Select(x => CalcString(x))
+                .ToArray();
+        }
+           
+        public string[] GetColumnsBetweenInclusive(string column1, string column2)
+        {
+            var start = column1;
+            var end = column2;
+
+            if (start.CompareTo(end) > 0)
+            {
+                var b = end;
+                end = start;
+                start = b;
+            }
+
+            var result = columnNames
+                .SkipWhile(x => x != start)
+                .TakeWhile(x => x != end)
+                .ToList();
+
+            result.Add(end);
+
+            return result.ToArray();
+        }
+
+        private string CalcString(int index)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            while (index > 0)
+            {
+                sb.Append(letters[index % letters.Length]);
+                index /= letters.Length;
+            }
+
+            return new string(sb.ToString().Reverse().ToArray());
+        }
+    }
+    
     public class XlsxWrapper
     {
         /// <summary>
@@ -126,7 +174,14 @@ namespace G1ANT.Addon.Xlsx
             }
         }
 
-        private XlsxWrapper() { }
+        private SpreadsheetDocument spreadsheetDocument = null;
+        private Sheet sheet;
+        private WorkbookPart wbPart;
+        private DataCache dataCache;
+
+        private XlsxWrapper()
+        {
+        }
 
         public XlsxWrapper(int id)
         {
@@ -134,10 +189,7 @@ namespace G1ANT.Addon.Xlsx
         }
 
         public int Id { get; set; }
-        private SpreadsheetDocument spreadsheetDocument = null;
-        private Sheet sheet;
-        private WorkbookPart wbPart;
-        private DataCache dataCache;
+        public CellR[] SelectedCells { get; set; }
 
         public Sheet GetSheetByName(string name)
         {
@@ -417,6 +469,51 @@ namespace G1ANT.Addon.Xlsx
             }
         }
 
+        public void SelectRange(CellR startCellReference, CellR endCellReference)
+        {
+            SelectedCells = startCellReference.BuildMatrix(endCellReference);
+        }
+
+        public void CopySelectionToClipboard()
+        {
+            string textValue = "";
+            string oldColumn = SelectedCells.FirstOrDefault()?.Column;
+            int oldRow = SelectedCells.FirstOrDefault()?.Row ?? 0;
+
+            foreach (var cell in SelectedCells)
+            {
+                if (oldColumn != cell.Column)
+                {
+                    textValue += "\t";
+                }
+                if (oldRow != cell.Row)
+                {
+                    textValue += "\r\n";
+                }
+
+                string position = cell.Address;
+
+                if (dataCache.CotainsAdress(position))
+                {
+                    textValue += dataCache.GetValue(position);
+                }
+                else
+                {
+                    WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                    Cell theCell = wsPart.Worksheet.Descendants<Cell>()
+                        .Where(c => c.CellReference == position.ToUpper())
+                        .FirstOrDefault();
+
+                    textValue += GetStringValue(theCell);
+                }
+
+                oldColumn = cell.Column;
+                oldRow = cell.Row;
+            }
+
+            Clipboard.SetText(textValue);
+        }
+
         private Cell CheckForCell(string column, Row row)
         {
             string position = column + row.RowIndex;
@@ -552,9 +649,9 @@ namespace G1ANT.Addon.Xlsx
                     item.Remove();
                 }
                 if (hyperLinks.Count() == 0)
-
+                {
                     hyperLinks.Remove();
-
+                }
             }
             wsPart.Worksheet.Save();
         }

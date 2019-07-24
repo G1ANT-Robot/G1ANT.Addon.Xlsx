@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Addon.Xlsx", "G1ANT.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Addon.Xlsx.Tests", "G1ANT.Addon.Xlsx.Tests\G1ANT.Addon.Xlsx.Tests.csproj", "{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Addon.Xlsx.UnitTests", "G1ANT.Addon.Xlsx.UnitTests\G1ANT.Addon.Xlsx.UnitTests.csproj", "{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AutomatedDebug|Any CPU = AutomatedDebug|Any CPU
@@ -36,6 +38,16 @@ Global
 		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Release (.Net 4.0)|Any CPU.Build.0 = Release|Any CPU
 		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{948BD6F9-FE0E-41F8-937A-B394A0EDDCA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.AutomatedDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.AutomatedDebug|Any CPU.Build.0 = Debug|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.Debug (.Net 4.0)|Any CPU.ActiveCfg = Debug|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.Debug (.Net 4.0)|Any CPU.Build.0 = Debug|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.Release (.Net 4.0)|Any CPU.ActiveCfg = Release|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.Release (.Net 4.0)|Any CPU.Build.0 = Release|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65ECCA2C-9362-4DD9-B044-7D3F52F3043C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
