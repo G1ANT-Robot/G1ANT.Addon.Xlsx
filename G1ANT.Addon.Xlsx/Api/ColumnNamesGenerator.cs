@@ -22,7 +22,7 @@ namespace G1ANT.Addon.Xlsx.Api
             letters = Enumerable.Range(0, 26).Select(x => (char)(x + 64)).ToArray();
             columnNames = Enumerable
                 .Range(0, ushort.MaxValue)
-                .Select(x => CalcString(x))
+                .Select(x => GenerateColumn(x))
                 .ToArray();
         }
            
@@ -48,17 +48,17 @@ namespace G1ANT.Addon.Xlsx.Api
             return result.ToArray();
         }
 
-        private string CalcString(int index)
+        private string GenerateColumn(int index)
         {
-            StringBuilder sb = new StringBuilder();
+            string column = "";
 
             while (index > 0)
             {
-                sb.Append(letters[index % letters.Length]);
+                column += letters[index % letters.Length];
                 index /= letters.Length;
             }
 
-            return new string(sb.ToString().Reverse().ToArray());
+            return new string(column.Reverse().ToArray());
         }
     }
 }

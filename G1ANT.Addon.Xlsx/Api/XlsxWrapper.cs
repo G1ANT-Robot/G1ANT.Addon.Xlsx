@@ -27,17 +27,6 @@ namespace G1ANT.Addon.Xlsx.Api
         /// <remarks>All members of this class are sensitive to the context of a sheet in XlsxWrapper</remarks>
         private class DataCache
         {
-            private struct CellRef
-            {
-                public string sheetID;
-                public string adress;
-
-                public override int GetHashCode()
-                {
-                    return sheetID.GetHashCode() ^ adress.GetHashCode();
-                }
-            }
-
             private readonly XlsxWrapper owner;
 
             private readonly Dictionary<CellRef, string> adress2value = new Dictionary<CellRef, string>();
@@ -45,22 +34,22 @@ namespace G1ANT.Addon.Xlsx.Api
 
             public string GetValue(string adress)
             {
-                return adress2value[new CellRef() { sheetID = owner.sheet.Id, adress = adress }];
+                return adress2value[new CellRef(owner.sheet.Id, adress)];
             }
 
             public IEnumerable<string> GetAdresses(string value)
             {
-                return value2adress[value].Where(r => r.sheetID == owner.sheet.Id).Select(r => r.adress);
+                return value2adress[value].Where(r => r.SheetId == owner.sheet.Id).Select(r => r.Address);
             }
 
             public bool CotainsAdress(string adress)
             {
-                return adress2value.ContainsKey(new CellRef() { adress = adress, sheetID = owner.sheet.Id });
+                return adress2value.ContainsKey(new CellRef(owner.sheet.Id, adress));
             }
 
             public bool ContainsValue(string value)
             {
-                return value2adress.ContainsKey(value) && value2adress[value].Where(r => r.sheetID == owner.sheet.Id).Count() > 0;
+                return value2adress.ContainsKey(value) && value2adress[value].Where(r => r.SheetId == owner.sheet.Id).Count() > 0;
             }
 
             public DataCache(XlsxWrapper xlsxWrapper)
@@ -82,7 +71,6 @@ namespace G1ANT.Addon.Xlsx.Api
                             }
                         }
                     }
-
                 }
 
                 foreach (WorksheetPart sheetPart in wbPart.WorksheetParts)
@@ -105,11 +93,8 @@ namespace G1ANT.Addon.Xlsx.Api
                             if (sheetReader.ElementType == typeof(Cell))
                             {
                                 Cell cell = (Cell)sheetReader.LoadCurrentElement();
-                                CellRef cellAdress = new CellRef()
-                                {
-                                    sheetID = sheetID,
-                                    adress = cell.CellReference
-                                };
+                                CellRef cellAdress = new CellRef(sheetID, cell.CellReference);
+
                                 if ((cell.DataType?.Value ?? CellValues.Error) == CellValues.SharedString)
                                     AddEntry(
                                         cellAdress,
@@ -138,7 +123,8 @@ namespace G1ANT.Addon.Xlsx.Api
         }
 
         public int Id { get; set; }
-        public CellR[] SelectedCells { get; set; }
+        public CellRef[] SelectedCells { get; private set; }
+        public string ActiveSheetId { get; private set; }
 
         public Sheet GetSheetByName(string name)
         {
@@ -418,7 +404,7 @@ namespace G1ANT.Addon.Xlsx.Api
             }
         }
 
-        public void SelectRange(CellR startCellReference, CellR endCellReference)
+        public void SelectRange(CellRef startCellReference, CellRef endCellReference)
         {
             SelectedCells = startCellReference.BuildMatrix(endCellReference);
         }
@@ -463,6 +449,16 @@ namespace G1ANT.Addon.Xlsx.Api
             Clipboard.SetText(textValue);
         }
 
+        public void PasteFromClipboard()
+        {
+            if (SelectedCells == null || !SelectedCells.Any())
+            {
+                throw new ArgumentException("Attempt to paste text into null selection");
+            }
+
+            SetValue(SelectedCells[0].Row, SelectedCells[0].Column, Clipboard.GetText());
+        }
+
         private Cell CheckForCell(string column, Row row)
         {
             string position = column + row.RowIndex;
@@ -495,6 +491,7 @@ namespace G1ANT.Addon.Xlsx.Api
         {
             Sheet foundSheet = GetSheetByName(name);
             sheet = foundSheet ?? throw new InvalidOperationException("Attempt to set null as active sheet");
+            ActiveSheetId = sheet.Id;
         }
 
         public void Create(string filePath)

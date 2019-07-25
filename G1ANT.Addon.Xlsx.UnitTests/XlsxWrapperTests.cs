@@ -1,10 +1,8 @@
 ﻿using G1ANT.Addon.Xlsx.Api;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Xlsx.Tests
 {
@@ -16,17 +14,26 @@ namespace G1ANT.Addon.Xlsx.Tests
         {
             var wrapper = new XlsxWrapper(0);
 
-            wrapper.SelectRange(new CellR("B", 3), new CellR("D", 6));
-            Assert.AreEqual(wrapper.SelectedCells.Count(), 12);
+            wrapper.SelectRange(new CellRef("sheet", "B", 3), new CellRef("sheet", "D", 6));
+            Assert.AreEqual(12, wrapper.SelectedCells.Count());
         }
 
         [Test]
-        public void TestSelectionWrongPairs()
+        public void TestSelectionOnWrongPairs()
         {
             var wrapper = new XlsxWrapper(0);
 
-            wrapper.SelectRange(new CellR("C", 4), new CellR("A", 8));
-            Assert.AreEqual(wrapper.SelectedCells.Count(), 15);
+            wrapper.SelectRange(new CellRef("sheet", "C", 4), new CellRef("sheet", "A", 8));
+            Assert.AreEqual(15, wrapper.SelectedCells.Count());
+        }
+
+        [Test]
+        public void TestSelectionOnDifferentSheets()
+        {
+            var wrapper = new XlsxWrapper(0);
+
+            wrapper.SelectRange(new CellRef("sheet1", "C", 4), new CellRef("sheet2", "A", 8));
+            Assert.AreEqual(null, wrapper.SelectedCells);
         }
     }
 }
