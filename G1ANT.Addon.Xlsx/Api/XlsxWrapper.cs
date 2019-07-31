@@ -487,6 +487,29 @@ namespace G1ANT.Addon.Xlsx.Api
             }
         }
 
+        public Tuple<System.Drawing.Color?, System.Drawing.Color?> GetCellColor(CellRef cellReference)
+        {
+            try
+            {
+                System.Drawing.Color? backgroundColor = null;
+                System.Drawing.Color? fontColor = null;
+
+                WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                Cell cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
+
+                var colorReader = new ColorReader(spreadsheetDocument);
+
+                backgroundColor = colorReader.GetCellBackgroundColor(cell);
+                fontColor = colorReader.GetCellFontFontColor(cell);
+
+                return new Tuple<System.Drawing.Color?, System.Drawing.Color?>(backgroundColor, fontColor);
+            }
+            catch
+            {
+                throw new ArgumentException("Could not read color from given cell.");
+            }
+        }
+
         public void ActivateSheet(string name)
         {
             Sheet foundSheet = GetSheetByName(name);

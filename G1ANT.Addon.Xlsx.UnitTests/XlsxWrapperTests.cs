@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace G1ANT.Addon.Xlsx.Tests
+namespace G1ANT.Addon.Xlsx.UnitTests
 {
     [TestFixture]
     public class XlsxWrapperTests
@@ -33,6 +33,15 @@ namespace G1ANT.Addon.Xlsx.Tests
             var wrapper = new XlsxWrapper(0);
 
             wrapper.SelectRange(new CellRef("sheet1", "C", 4), new CellRef("sheet2", "A", 8));
+            Assert.AreEqual(null, wrapper.SelectedCells);
+        }
+
+        [Test]
+        public void TestGetColor()
+        {
+            var wrapper = new XlsxWrapper(0);
+
+            //wrapper.GetCellColor(new CellRef("sheet1", "C", 4));
             Assert.AreEqual(null, wrapper.SelectedCells);
         }
     }
