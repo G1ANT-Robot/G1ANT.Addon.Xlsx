@@ -10,14 +10,14 @@ using System.Xml.Linq;
 
 namespace G1ANT.Addon.Xlsx.Api
 {
-    public class ColorReader
+    public class ColorService
     {
         private readonly SpreadsheetDocument document;
 
         private static Dictionary<int, System.Drawing.Color> _indexedColors;
         private static System.Drawing.Color[] _themeColors;
 
-        public ColorReader(SpreadsheetDocument document)
+        public ColorService(SpreadsheetDocument document)
         {
             this.document = document;
         }
@@ -39,8 +39,52 @@ namespace G1ANT.Addon.Xlsx.Api
 
             return GetColor(pf.ForegroundColor);
         }
-        
-        public System.Drawing.Color? GetCellFontFontColor(Cell theCell)
+
+        public void SetCellBackgroundColor(Cell theCell, System.Drawing.Color? rgb)
+        {
+            var styleIndex = GetCellStyleIndex(theCell);
+            var styles = document.WorkbookPart.GetPartsOfType<WorkbookStylesPart>().First();
+
+            if (rgb == null)
+            {
+                var newCellFormat = (CellFormat)styles.Stylesheet.CellFormats.ChildElements[styleIndex].Clone();
+                newCellFormat.FillId = 0;
+
+                var formatIndex = styles.Stylesheet.CellFormats.Count;
+                styles.Stylesheet.CellFormats.Append(newCellFormat);
+                theCell.StyleIndex = formatIndex;
+            }
+            else
+            {
+                var targetColor = rgb.Value.A.ToString("X2") + rgb.Value.R.ToString("X2") + rgb.Value.G.ToString("X2") + rgb.Value.B.ToString("X2");
+
+                var newFillId = styles.Stylesheet.Fills.Count;
+                var newFormatId = styles.Stylesheet.CellFormats.Count;
+
+                var cellFormat = (CellFormat)styles.Stylesheet.CellFormats.ChildElements[styleIndex];
+                var newCellFormat = (CellFormat)cellFormat.Clone();
+
+                var fill = (Fill)styles.Stylesheet.Fills.ChildElements[(int)newCellFormat.FillId.Value];
+                var newFill = (Fill)fill.Clone();
+
+                newCellFormat.FillId = newFillId;
+
+                var newPatternFill = new PatternFill() { PatternType = PatternValues.Solid };
+                newPatternFill.ForegroundColor = new ForegroundColor { Rgb = targetColor };
+                newPatternFill.BackgroundColor = new BackgroundColor { Indexed = 64U };
+                newFill.PatternFill = newPatternFill;
+
+                styles.Stylesheet.Fills.Append(newFill);
+                styles.Stylesheet.Fills.Count = new DocumentFormat.OpenXml.UInt32Value((uint)styles.Stylesheet.Fills.ChildElements.Count);
+
+                styles.Stylesheet.CellFormats.Append(newCellFormat);
+                styles.Stylesheet.CellFormats.Count = new DocumentFormat.OpenXml.UInt32Value((uint)styles.Stylesheet.CellFormats.ChildElements.Count);
+
+                theCell.StyleIndex = newFormatId;
+            }
+        }
+
+        public System.Drawing.Color? GetCellFontColor(Cell theCell)
         {
             var cellStyleIndex = GetCellStyleIndex(theCell);
 
@@ -49,6 +93,33 @@ namespace G1ANT.Addon.Xlsx.Api
             var font = (Font)styles.Stylesheet.Fonts.ChildElements[(int)cellFormat.FontId.Value];
 
             return GetColor(font.Color);
+        }
+
+        public void SetCellFontColor(Cell cell, System.Drawing.Color? rgb)
+        {
+            var targetColor = rgb.Value.A.ToString("X2") + rgb.Value.R.ToString("X2") + rgb.Value.G.ToString("X2") + rgb.Value.B.ToString("X2");
+
+            WorkbookStylesPart styles = document.WorkbookPart.WorkbookStylesPart;
+            Stylesheet stylesheet = styles.Stylesheet;
+            CellFormats cellformats = stylesheet.CellFormats;
+            Fonts fonts = stylesheet.Fonts;
+
+            UInt32 fontIndex = fonts.Count;
+            UInt32 formatIndex = cellformats.Count;
+
+            var format = (CellFormat)cellformats.ElementAt((int)cell.StyleIndex.Value);
+
+            var font = (Font)fonts.ElementAt((int)format.FontId.Value);
+            var newfont = (Font)font.Clone();
+            newfont.Color = new Color() { Rgb = targetColor };
+            fonts.Append(newfont);
+            fonts.Count = new DocumentFormat.OpenXml.UInt32Value((uint)fonts.ChildElements.Count);
+
+            CellFormat newformat = (CellFormat)format.Clone();
+            newformat.FontId = fontIndex;
+            cellformats.Append(newformat);
+            cellformats.Count = new DocumentFormat.OpenXml.UInt32Value((uint)cellformats.ChildElements.Count);
+            cell.StyleIndex = formatIndex;
         }
 
         public System.Drawing.Color[] ThemeColors

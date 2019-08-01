@@ -497,16 +497,50 @@ namespace G1ANT.Addon.Xlsx.Api
                 WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
                 Cell cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
 
-                var colorReader = new ColorReader(spreadsheetDocument);
+                var colorReader = new ColorService(spreadsheetDocument);
 
                 backgroundColor = colorReader.GetCellBackgroundColor(cell);
-                fontColor = colorReader.GetCellFontFontColor(cell);
+                fontColor = colorReader.GetCellFontColor(cell);
 
                 return new Tuple<System.Drawing.Color?, System.Drawing.Color?>(backgroundColor, fontColor);
             }
             catch
             {
                 throw new ArgumentException("Could not read color from given cell.");
+            }
+        }
+
+        public void SetCellBackgroundColor(CellRef cellReference, System.Drawing.Color? color)
+        {
+            try
+            {
+                WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                Cell cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
+
+                var colorReader = new ColorService(spreadsheetDocument);
+
+                colorReader.SetCellBackgroundColor(cell, color);
+            }
+            catch
+            {
+                throw new ArgumentException("Could not set color of given cell.");
+            }
+        }
+
+        public void SetCellFontColor(CellRef cellReference, System.Drawing.Color? color)
+        {
+            try
+            {
+                WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                Cell cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
+
+                var colorReader = new ColorService(spreadsheetDocument);
+
+                colorReader.SetCellFontColor(cell, color);
+            }
+            catch
+            {
+                throw new ArgumentException("Could not set color of given cell.");
             }
         }
 

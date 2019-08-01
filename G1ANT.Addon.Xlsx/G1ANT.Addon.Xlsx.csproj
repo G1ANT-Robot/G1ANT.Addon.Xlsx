@@ -77,11 +77,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\ColorReader.cs" />
+    <Compile Include="Api\ColorService.cs" />
     <Compile Include="Api\ColumnNamesGenerator.cs" />
     <Compile Include="Api\UriFixer.cs" />
     <Compile Include="Api\XlsxManager.cs" />
     <Compile Include="Api\XlsxWrapper.cs" />
+    <Compile Include="Commands\XlsxSetColorCommand.cs" />
     <Compile Include="Commands\XlsxGetColorCommand.cs" />
     <Compile Include="Commands\XlsxPasteCommand.cs" />
     <Compile Include="Commands\XlsxSelectCommand.cs" />
