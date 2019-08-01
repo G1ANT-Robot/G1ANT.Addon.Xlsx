@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Xlsx
 *    www.g1ant.com
@@ -12,12 +12,12 @@ using G1ANT.Language;
 
 namespace G1ANT.Addon.Xlsx
 {
-    [Command(Name = "xlsx.setvalue",Tooltip = "This command allows to set value in specified cell in .xlsx file")]
+    [Command(Name = "xlsx.setvalue",Tooltip = "This command sets a value of a specified cell in an .xls(x) file")]
     public class XlsxSetValueCommand : Command
     {
         public  class Arguments : CommandArguments
         {
-            [Argument(Required = true)]
+            [Argument(Required = true, Tooltip = "Value to be set")]
             public TextStructure Value { get; set; } = new TextStructure(string.Empty);
 
             [Argument(Required = true, Tooltip = "Cell's row number")]
@@ -29,7 +29,7 @@ namespace G1ANT.Addon.Xlsx
             [Argument(Tooltip = "Cell's column name")]
             public TextStructure ColName { get; set; }
 
-            [Argument]
+            [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public XlsxSetValueCommand(AbstractScripter scripter) : base(scripter)
