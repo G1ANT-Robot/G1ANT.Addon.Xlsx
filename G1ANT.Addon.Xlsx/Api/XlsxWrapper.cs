@@ -13,14 +13,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
-using System.IO.Compression;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Linq;
 using DocumentFormat.OpenXml;
+using System.Windows.Forms;
 
-namespace G1ANT.Addon.Xlsx
+namespace G1ANT.Addon.Xlsx.Api
 {
     public class XlsxWrapper
     {
@@ -30,17 +27,6 @@ namespace G1ANT.Addon.Xlsx
         /// <remarks>All members of this class are sensitive to the context of a sheet in XlsxWrapper</remarks>
         private class DataCache
         {
-            private struct CellRef
-            {
-                public string sheetID;
-                public string adress;
-
-                public override int GetHashCode()
-                {
-                    return sheetID.GetHashCode() ^ adress.GetHashCode();
-                }
-            }
-
             private readonly XlsxWrapper owner;
 
             private readonly Dictionary<CellRef, string> adress2value = new Dictionary<CellRef, string>();
@@ -48,22 +34,22 @@ namespace G1ANT.Addon.Xlsx
 
             public string GetValue(string adress)
             {
-                return adress2value[new CellRef() { sheetID = owner.sheet.Id, adress = adress }];
+                return adress2value[new CellRef(owner.sheet.Id, adress)];
             }
 
             public IEnumerable<string> GetAdresses(string value)
             {
-                return value2adress[value].Where(r => r.sheetID == owner.sheet.Id).Select(r => r.adress);
+                return value2adress[value].Where(r => r.SheetId == owner.sheet.Id).Select(r => r.Address);
             }
 
             public bool CotainsAdress(string adress)
             {
-                return adress2value.ContainsKey(new CellRef() { adress = adress, sheetID = owner.sheet.Id });
+                return adress2value.ContainsKey(new CellRef(owner.sheet.Id, adress));
             }
 
             public bool ContainsValue(string value)
             {
-                return value2adress.ContainsKey(value) && value2adress[value].Where(r => r.sheetID == owner.sheet.Id).Count() > 0;
+                return value2adress.ContainsKey(value) && value2adress[value].Where(r => r.SheetId == owner.sheet.Id).Count() > 0;
             }
 
             public DataCache(XlsxWrapper xlsxWrapper)
@@ -85,7 +71,6 @@ namespace G1ANT.Addon.Xlsx
                             }
                         }
                     }
-
                 }
 
                 foreach (WorksheetPart sheetPart in wbPart.WorksheetParts)
@@ -101,18 +86,15 @@ namespace G1ANT.Addon.Xlsx
 
                     string sheetID = wbPart.GetIdOfPart(sheetPart);
 
-                    using (OpenXmlReader sheetReader = OpenXmlReader.Create(sheetPart))
+                    using (var sheetReader = OpenXmlReader.Create(sheetPart))
                     {
                         while (sheetReader.Read())
                         {
                             if (sheetReader.ElementType == typeof(Cell))
                             {
-                                Cell cell = (Cell)sheetReader.LoadCurrentElement();
-                                CellRef cellAdress = new CellRef()
-                                {
-                                    sheetID = sheetID,
-                                    adress = cell.CellReference
-                                };
+                                var cell = (Cell)sheetReader.LoadCurrentElement();
+                                var cellAdress = new CellRef(sheetID, cell.CellReference);
+
                                 if ((cell.DataType?.Value ?? CellValues.Error) == CellValues.SharedString)
                                     AddEntry(
                                         cellAdress,
@@ -126,7 +108,14 @@ namespace G1ANT.Addon.Xlsx
             }
         }
 
-        private XlsxWrapper() { }
+        private SpreadsheetDocument spreadsheetDocument = null;
+        private Sheet sheet;
+        private WorkbookPart wbPart;
+        private DataCache dataCache;
+
+        private XlsxWrapper()
+        {
+        }
 
         public XlsxWrapper(int id)
         {
@@ -134,10 +123,8 @@ namespace G1ANT.Addon.Xlsx
         }
 
         public int Id { get; set; }
-        private SpreadsheetDocument spreadsheetDocument = null;
-        private Sheet sheet;
-        private WorkbookPart wbPart;
-        private DataCache dataCache;
+        public CellRef[] SelectedCells { get; private set; }
+        public string ActiveSheetId { get; private set; }
 
         public Sheet GetSheetByName(string name)
         {
@@ -417,6 +404,61 @@ namespace G1ANT.Addon.Xlsx
             }
         }
 
+        public void SelectRange(CellRef startCellReference, CellRef endCellReference)
+        {
+            SelectedCells = startCellReference.BuildMatrix(endCellReference);
+        }
+
+        public void CopySelectionToClipboard()
+        {
+            string textValue = "";
+            string oldColumn = SelectedCells.FirstOrDefault()?.Column;
+            int oldRow = SelectedCells.FirstOrDefault()?.Row ?? 0;
+
+            foreach (var cell in SelectedCells)
+            {
+                if (oldColumn != cell.Column)
+                {
+                    textValue += "\t";
+                }
+                if (oldRow != cell.Row)
+                {
+                    textValue += "\r\n";
+                }
+
+                string position = cell.Address;
+
+                if (dataCache.CotainsAdress(position))
+                {
+                    textValue += dataCache.GetValue(position);
+                }
+                else
+                {
+                    var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                    var theCell = wsPart.Worksheet.Descendants<Cell>()
+                        .Where(c => c.CellReference == position.ToUpper())
+                        .FirstOrDefault();
+
+                    textValue += GetStringValue(theCell);
+                }
+
+                oldColumn = cell.Column;
+                oldRow = cell.Row;
+            }
+
+            Clipboard.SetText(textValue);
+        }
+
+        public void PasteFromClipboard()
+        {
+            if (SelectedCells == null || !SelectedCells.Any())
+            {
+                throw new ArgumentException("Attempt to paste text into null selection");
+            }
+
+            SetValue(SelectedCells[0].Row, SelectedCells[0].Column, Clipboard.GetText());
+        }
+
         private Cell CheckForCell(string column, Row row)
         {
             string position = column + row.RowIndex;
@@ -445,10 +487,68 @@ namespace G1ANT.Addon.Xlsx
             }
         }
 
+        public Tuple<System.Drawing.Color?, System.Drawing.Color?> GetCellColor(CellRef cellReference)
+        {
+            try
+            {
+                System.Drawing.Color? backgroundColor = null;
+                System.Drawing.Color? fontColor = null;
+
+                var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                var cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
+
+                var colorReader = new ColorService(spreadsheetDocument);
+
+                backgroundColor = colorReader.GetCellBackgroundColor(cell);
+                fontColor = colorReader.GetCellFontColor(cell);
+
+                return new Tuple<System.Drawing.Color?, System.Drawing.Color?>(backgroundColor, fontColor);
+            }
+            catch
+            {
+                throw new ArgumentException("Could not read color from given cell.");
+            }
+        }
+
+        public void SetCellBackgroundColor(CellRef cellReference, System.Drawing.Color? color)
+        {
+            try
+            {
+                var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                var cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
+
+                var colorReader = new ColorService(spreadsheetDocument);
+
+                colorReader.SetCellBackgroundColor(cell, color);
+            }
+            catch
+            {
+                throw new ArgumentException("Could not set color of given cell.");
+            }
+        }
+
+        public void SetCellFontColor(CellRef cellReference, System.Drawing.Color? color)
+        {
+            try
+            {
+                var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                var cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
+
+                var colorReader = new ColorService(spreadsheetDocument);
+
+                colorReader.SetCellFontColor(cell, color);
+            }
+            catch
+            {
+                throw new ArgumentException("Could not set color of given cell.");
+            }
+        }
+
         public void ActivateSheet(string name)
         {
             Sheet foundSheet = GetSheetByName(name);
             sheet = foundSheet ?? throw new InvalidOperationException("Attempt to set null as active sheet");
+            ActiveSheetId = sheet.Id;
         }
 
         public void Create(string filePath)
@@ -557,9 +657,9 @@ namespace G1ANT.Addon.Xlsx
                     item.Remove();
                 }
                 if (hyperLinks.Count() == 0)
-
+                {
                     hyperLinks.Remove();
-
+                }
             }
             wsPart.Worksheet.Save();
         }
