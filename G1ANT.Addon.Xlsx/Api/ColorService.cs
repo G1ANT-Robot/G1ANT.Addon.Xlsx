@@ -2,10 +2,7 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace G1ANT.Addon.Xlsx.Api
@@ -14,17 +11,17 @@ namespace G1ANT.Addon.Xlsx.Api
     {
         private readonly SpreadsheetDocument document;
 
-        private static Dictionary<int, System.Drawing.Color> _indexedColors;
-        private static System.Drawing.Color[] _themeColors;
+        private static Dictionary<int, System.Drawing.Color> indexedColors;
+        private static System.Drawing.Color[] themeColors;
 
         public ColorService(SpreadsheetDocument document)
         {
             this.document = document;
         }
 
-        public System.Drawing.Color? GetCellBackgroundColor(Cell theCell)
+        public System.Drawing.Color? GetCellBackgroundColor(Cell cell)
         {
-            var cellStyleIndex = GetCellStyleIndex(theCell);
+            var cellStyleIndex = GetCellStyleIndex(cell);
 
             var styles = document.WorkbookPart.GetPartsOfType<WorkbookStylesPart>().First();
             var cellFormat = (CellFormat)styles.Stylesheet.CellFormats.ChildElements[cellStyleIndex];
@@ -40,9 +37,9 @@ namespace G1ANT.Addon.Xlsx.Api
             return GetColor(pf.ForegroundColor);
         }
 
-        public void SetCellBackgroundColor(Cell theCell, System.Drawing.Color? rgb)
+        public void SetCellBackgroundColor(Cell cell, System.Drawing.Color? rgb)
         {
-            var styleIndex = GetCellStyleIndex(theCell);
+            var styleIndex = GetCellStyleIndex(cell);
             var styles = document.WorkbookPart.GetPartsOfType<WorkbookStylesPart>().First();
 
             if (rgb == null)
@@ -52,7 +49,7 @@ namespace G1ANT.Addon.Xlsx.Api
 
                 var formatIndex = styles.Stylesheet.CellFormats.Count;
                 styles.Stylesheet.CellFormats.Append(newCellFormat);
-                theCell.StyleIndex = formatIndex;
+                cell.StyleIndex = formatIndex;
             }
             else
             {
@@ -80,13 +77,13 @@ namespace G1ANT.Addon.Xlsx.Api
                 styles.Stylesheet.CellFormats.Append(newCellFormat);
                 styles.Stylesheet.CellFormats.Count = new DocumentFormat.OpenXml.UInt32Value((uint)styles.Stylesheet.CellFormats.ChildElements.Count);
 
-                theCell.StyleIndex = newFormatId;
+                cell.StyleIndex = newFormatId;
             }
         }
 
-        public System.Drawing.Color? GetCellFontColor(Cell theCell)
+        public System.Drawing.Color? GetCellFontColor(Cell cell)
         {
-            var cellStyleIndex = GetCellStyleIndex(theCell);
+            var cellStyleIndex = GetCellStyleIndex(cell);
 
             var styles = document.WorkbookPart.GetPartsOfType<WorkbookStylesPart>().First();
             var cellFormat = (CellFormat)styles.Stylesheet.CellFormats.ChildElements[cellStyleIndex];
@@ -99,13 +96,13 @@ namespace G1ANT.Addon.Xlsx.Api
         {
             var targetColor = rgb.Value.A.ToString("X2") + rgb.Value.R.ToString("X2") + rgb.Value.G.ToString("X2") + rgb.Value.B.ToString("X2");
 
-            WorkbookStylesPart styles = document.WorkbookPart.WorkbookStylesPart;
-            Stylesheet stylesheet = styles.Stylesheet;
-            CellFormats cellformats = stylesheet.CellFormats;
-            Fonts fonts = stylesheet.Fonts;
+            var styles = document.WorkbookPart.WorkbookStylesPart;
+            var stylesheet = styles.Stylesheet;
+            var cellformats = stylesheet.CellFormats;
+            var fonts = stylesheet.Fonts;
 
-            UInt32 fontIndex = fonts.Count;
-            UInt32 formatIndex = cellformats.Count;
+            var fontIndex = fonts.Count;
+            var formatIndex = cellformats.Count;
 
             var format = (CellFormat)cellformats.ElementAt((int)cell.StyleIndex.Value);
 
@@ -115,7 +112,7 @@ namespace G1ANT.Addon.Xlsx.Api
             fonts.Append(newfont);
             fonts.Count = new DocumentFormat.OpenXml.UInt32Value((uint)fonts.ChildElements.Count);
 
-            CellFormat newformat = (CellFormat)format.Clone();
+            var newformat = (CellFormat)format.Clone();
             newformat.FontId = fontIndex;
             cellformats.Append(newformat);
             cellformats.Count = new DocumentFormat.OpenXml.UInt32Value((uint)cellformats.ChildElements.Count);
@@ -126,12 +123,12 @@ namespace G1ANT.Addon.Xlsx.Api
         {
             get
             {
-                if (_themeColors == null)
+                if (themeColors == null)
                 {
                     LoadTheme(document);
                 }
 
-                return _themeColors;
+                return themeColors;
             }
         }
 
@@ -139,7 +136,7 @@ namespace G1ANT.Addon.Xlsx.Api
         {
             get
             {
-                if (_indexedColors == null)
+                if (indexedColors == null)
                 {
                     var retVal = new Dictionary<int, System.Drawing.Color>()
                     {
@@ -209,9 +206,9 @@ namespace G1ANT.Addon.Xlsx.Api
                         {63, System.Drawing.ColorTranslator.FromHtml("#FF333333")},
                         {64, System.Drawing.Color.Transparent}
                     };
-                    _indexedColors = retVal;
+                    indexedColors = retVal;
                 }
-                return _indexedColors;
+                return indexedColors;
             }
         }        
 
@@ -234,7 +231,7 @@ namespace G1ANT.Addon.Xlsx.Api
                         .Elements()
                         .ToArray();
 
-                    _themeColors = new System.Drawing.Color[themeElements.Length];
+                    themeColors = new System.Drawing.Color[themeElements.Length];
 
                     for (int i = 0; i < themeElements.Length; i++)
                     {

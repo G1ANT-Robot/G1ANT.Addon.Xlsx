@@ -86,14 +86,14 @@ namespace G1ANT.Addon.Xlsx.Api
 
                     string sheetID = wbPart.GetIdOfPart(sheetPart);
 
-                    using (OpenXmlReader sheetReader = OpenXmlReader.Create(sheetPart))
+                    using (var sheetReader = OpenXmlReader.Create(sheetPart))
                     {
                         while (sheetReader.Read())
                         {
                             if (sheetReader.ElementType == typeof(Cell))
                             {
-                                Cell cell = (Cell)sheetReader.LoadCurrentElement();
-                                CellRef cellAdress = new CellRef(sheetID, cell.CellReference);
+                                var cell = (Cell)sheetReader.LoadCurrentElement();
+                                var cellAdress = new CellRef(sheetID, cell.CellReference);
 
                                 if ((cell.DataType?.Value ?? CellValues.Error) == CellValues.SharedString)
                                     AddEntry(
@@ -434,8 +434,8 @@ namespace G1ANT.Addon.Xlsx.Api
                 }
                 else
                 {
-                    WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
-                    Cell theCell = wsPart.Worksheet.Descendants<Cell>()
+                    var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                    var theCell = wsPart.Worksheet.Descendants<Cell>()
                         .Where(c => c.CellReference == position.ToUpper())
                         .FirstOrDefault();
 
@@ -494,8 +494,8 @@ namespace G1ANT.Addon.Xlsx.Api
                 System.Drawing.Color? backgroundColor = null;
                 System.Drawing.Color? fontColor = null;
 
-                WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
-                Cell cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
+                var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                var cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
 
                 var colorReader = new ColorService(spreadsheetDocument);
 
@@ -514,8 +514,8 @@ namespace G1ANT.Addon.Xlsx.Api
         {
             try
             {
-                WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
-                Cell cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
+                var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                var cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
 
                 var colorReader = new ColorService(spreadsheetDocument);
 
@@ -531,8 +531,8 @@ namespace G1ANT.Addon.Xlsx.Api
         {
             try
             {
-                WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
-                Cell cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
+                var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+                var cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference.Address).FirstOrDefault();
 
                 var colorReader = new ColorService(spreadsheetDocument);
 

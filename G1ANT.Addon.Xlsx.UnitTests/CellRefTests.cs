@@ -7,9 +7,9 @@ namespace G1ANT.Addon.Xlsx.UnitTests
     public class CellRefTests
     {
         [Test]
-        public void TestConstructor()
+        public void ShouldPropertiesFillCorrectly_WhenCreatedByExcelReference()
         {
-            CellRef a = new CellRef("sheet", "ABC42");
+            var a = new CellRef("sheet", "ABC42");
 
             Assert.AreEqual("ABC42", a.Address);
             Assert.AreEqual(42, a.Row);

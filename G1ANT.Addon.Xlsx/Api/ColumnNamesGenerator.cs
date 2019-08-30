@@ -8,19 +8,18 @@
 *
 */
 using System.Linq;
-using System.Text;
 
 namespace G1ANT.Addon.Xlsx.Api
 {
     public class ColumnNamesGenerator
     {
-        private readonly char[] letters;
-        private readonly string[] columnNames;
+        private static char[] Letters;
+        private static string[] ColumnNames;
 
-        public ColumnNamesGenerator()
+        static ColumnNamesGenerator()
         {
-            letters = Enumerable.Range(0, 26).Select(x => (char)(x + 64)).ToArray();
-            columnNames = Enumerable
+            Letters = Enumerable.Range(0, 26).Select(x => (char)(x + 64)).ToArray();
+            ColumnNames = Enumerable
                 .Range(0, ushort.MaxValue)
                 .Select(x => GenerateColumn(x))
                 .ToArray();
@@ -38,7 +37,7 @@ namespace G1ANT.Addon.Xlsx.Api
                 start = b;
             }
 
-            var result = columnNames
+            var result = ColumnNames
                 .SkipWhile(x => x != start)
                 .TakeWhile(x => x != end)
                 .ToList();
@@ -48,14 +47,14 @@ namespace G1ANT.Addon.Xlsx.Api
             return result.ToArray();
         }
 
-        private string GenerateColumn(int index)
+        private static string GenerateColumn(int index)
         {
             string column = "";
 
             while (index > 0)
             {
-                column += letters[index % letters.Length];
-                index /= letters.Length;
+                column += Letters[index % Letters.Length];
+                index /= Letters.Length;
             }
 
             return new string(column.Reverse().ToArray());

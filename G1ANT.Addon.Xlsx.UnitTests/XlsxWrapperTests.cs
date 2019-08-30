@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 
 namespace G1ANT.Addon.Xlsx.UnitTests
@@ -10,7 +11,7 @@ namespace G1ANT.Addon.Xlsx.UnitTests
     public class XlsxWrapperTests
     {
         [Test]
-        public void TestSelection()
+        public void ShouldSelectedCellsUpdate_WhenCaliingSelectRange()
         {
             var wrapper = new XlsxWrapper(0);
 
@@ -19,7 +20,7 @@ namespace G1ANT.Addon.Xlsx.UnitTests
         }
 
         [Test]
-        public void TestSelectionOnWrongPairs()
+        public void ShouldSelectionWork_WhenMixingOrderOfSelectionCorners()
         {
             var wrapper = new XlsxWrapper(0);
 
@@ -28,20 +29,11 @@ namespace G1ANT.Addon.Xlsx.UnitTests
         }
 
         [Test]
-        public void TestSelectionOnDifferentSheets()
+        public void ShouldntSelectionWork_WhenSelectingAcrossSheets()
         {
             var wrapper = new XlsxWrapper(0);
 
             wrapper.SelectRange(new CellRef("sheet1", "C", 4), new CellRef("sheet2", "A", 8));
-            Assert.AreEqual(null, wrapper.SelectedCells);
-        }
-
-        [Test]
-        public void TestGetColor()
-        {
-            var wrapper = new XlsxWrapper(0);
-
-            //wrapper.GetCellColor(new CellRef("sheet1", "C", 4));
             Assert.AreEqual(null, wrapper.SelectedCells);
         }
     }

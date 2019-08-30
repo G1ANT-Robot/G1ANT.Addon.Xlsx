@@ -48,17 +48,17 @@ namespace G1ANT.Addon.Xlsx.Api
             var startRow = Row < otherCorner.Row ? Row : otherCorner.Row;
             var endRow = Row > otherCorner.Row ? Row : otherCorner.Row;
 
-            var start = new CellRef(SheetId, startColumn, startRow);
-            var end = new CellRef(SheetId, endColumn, endRow);
+            var startCell = new CellRef(SheetId, startColumn, startRow);
+            var endCell = new CellRef(SheetId, endColumn, endRow);
 
-            long rows = Math.Abs(start.Row - end.Row) + 1;
-            var columns = new ColumnNamesGenerator().GetColumnsBetweenInclusive(start.Column, end.Column);
+            int rows = Math.Abs(startCell.Row - endCell.Row) + 1;
+            var columns = new ColumnNamesGenerator().GetColumnsBetweenInclusive(startCell.Column, endCell.Column);
 
             var result = new CellRef[rows * columns.Length];
 
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = new CellRef(SheetId, columns[i % columns.Length], i / columns.Length + start.Row);
+                result[i] = new CellRef(SheetId, columns[i % columns.Length], i / columns.Length + startCell.Row);
             }
 
             return result;
