@@ -622,6 +622,11 @@ namespace G1ANT.Addon.Xlsx.Api
             catch { }
         }
 
+        public void Save()
+        {
+            spreadsheetDocument.Save();
+        }
+
         private static Uri FixUri(string brokenUri)
         {
             return new Uri("http://broken-link/");

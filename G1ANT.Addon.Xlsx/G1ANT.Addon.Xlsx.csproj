@@ -80,6 +80,7 @@
     <Compile Include="Commands\XlsxGetColorCommand.cs" />
     <Compile Include="Commands\XlsxPasteCommand.cs" />
     <Compile Include="Commands\XlsxSelectCommand.cs" />
+    <Compile Include="Commands\XlsxSaveCommand.cs" />
     <Compile Include="Commands\XlsxCountRowsCommand.cs" />
     <Compile Include="Commands\XlsxFindCommand.cs" />
     <Compile Include="Commands\XlsxCopyCommand.cs" />
