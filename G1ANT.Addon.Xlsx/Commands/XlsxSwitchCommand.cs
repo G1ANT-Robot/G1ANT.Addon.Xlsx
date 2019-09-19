@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Xlsx
 *    www.g1ant.com
@@ -12,15 +12,15 @@ using G1ANT.Language;
 
 namespace G1ANT.Addon.Xlsx
 {
-    [Command(Name = "xlsx.switch", Tooltip = "This command allows to switch between open .xlsx files.")]
+    [Command(Name = "xlsx.switch", Tooltip = "This command switches between opened .xls(x) files")]
     public class XlsxSwitchCommand : Command
     {
         public class Arguments : CommandArguments
         {
-            [Argument(Required = true)]
+            [Argument(Required = true, Tooltip = "ID of an opened file to switch to")]
             public IntegerStructure Id { get; set; } = new IntegerStructure(0);
 
-            [Argument]
+            [Argument(Tooltip = "Name of a variable where the command's result will be stored: `true` if it succeeded, `false` if it did not")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public XlsxSwitchCommand(AbstractScripter scripter) : base(scripter)

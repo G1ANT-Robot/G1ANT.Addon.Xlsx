@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Xlsx
 *    www.g1ant.com
@@ -12,12 +12,12 @@ using G1ANT.Language;
 
 namespace G1ANT.Addon.Xlsx
 {
-    [Command(Name = "xlsx.getvalue", Tooltip = "This command allows to get value of specified cell in .xlsx file")]
+    [Command(Name = "xlsx.getvalue", Tooltip = "This command gets a value of a specified cell in an .xls(x) file")]
     public class XlsxGetValueCommand : Command
     {
         public class Arguments : CommandArguments
         {
-            [Argument(Required = true, Tooltip = "Cell’s row number or row’s name")]
+            [Argument(Required = true, Tooltip = "Cell's row number")]
             public IntegerStructure Row { get; set; }
 
             [Argument(Tooltip = "Cell's column index")]
@@ -26,7 +26,7 @@ namespace G1ANT.Addon.Xlsx
             [Argument(Tooltip = "Cell's column name")]
             public TextStructure ColName { get; set; }
 
-            [Argument]
+            [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public XlsxGetValueCommand(AbstractScripter scripter) : base(scripter)
