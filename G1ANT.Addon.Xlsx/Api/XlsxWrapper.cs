@@ -386,7 +386,7 @@ namespace G1ANT.Addon.Xlsx.Api
             //{
             //    cell.CellValue = new CellValue(date.ToOADate().ToString());
             //    cell.StyleIndex = 1;
-            //} 
+            //}
 
             else
             {
