@@ -94,6 +94,7 @@ namespace G1ANT.Addon.Xlsx.Api
 
         public void SetCellFontColor(Cell cell, System.Drawing.Color? rgb)
         {
+            var styleIndex = GetCellStyleIndex(cell);
             var targetColor = rgb.Value.A.ToString("X2") + rgb.Value.R.ToString("X2") + rgb.Value.G.ToString("X2") + rgb.Value.B.ToString("X2");
 
             var styles = document.WorkbookPart.WorkbookStylesPart;
@@ -104,7 +105,7 @@ namespace G1ANT.Addon.Xlsx.Api
             var fontIndex = fonts.Count;
             var formatIndex = cellformats.Count;
 
-            var format = (CellFormat)cellformats.ElementAt((int)cell.StyleIndex.Value);
+            var format = (CellFormat)cellformats.ElementAt(styleIndex);
 
             var font = (Font)fonts.ElementAt((int)format.FontId.Value);
             var newfont = (Font)font.Clone();
