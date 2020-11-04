@@ -37,9 +37,9 @@ namespace G1ANT.Addon.Xlsx.Api
                 return adress2value[new CellRef(owner.sheet.Id, adress)];
             }
 
-            public IEnumerable<string> GetAdresses(string value)
+            public IEnumerable<CellRef> GetAdresses(string value)
             {
-                return value2adress[value].Where(r => r.SheetId == owner.sheet.Id).Select(r => r.Address);
+                return value2adress[value].Where(r => r.SheetId == owner.sheet.Id).Select(r => r);
             }
 
             public bool CotainsAdress(string adress)
@@ -632,11 +632,14 @@ namespace G1ANT.Addon.Xlsx.Api
             return new Uri("http://broken-link/");
         }
 
-        public string Find(string value)
+        public IEnumerable<string> Find(string value, bool inSelection)
         {
             if (dataCache.ContainsValue(value))
             {
-                return dataCache.GetAdresses(value).First();
+                var result = dataCache.GetAdresses(value);
+                if (inSelection)
+                    result = result.Where(x => SelectedCells.Contains(x));
+                return result.Select(x => x.Address);
             }
             return null;
         }
