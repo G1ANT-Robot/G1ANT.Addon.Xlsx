@@ -38,8 +38,8 @@ namespace G1ANT.Addon.Xlsx
         public void Execute(CopyArguments arguments)
         {
             XlsxManager.CurrentXlsx.SelectRange(
-                new CellRef(XlsxManager.CurrentXlsx.ActiveSheetId, arguments.Column1.Value, arguments.Row1.Value),
-                new CellRef(XlsxManager.CurrentXlsx.ActiveSheetId, arguments.Column2.Value, arguments.Row2.Value)
+                new CellRef(XlsxManager.CurrentXlsx.ActiveSheetId, XlsxManager.CurrentXlsx.FormatInput(arguments.Column1.Value, arguments.Row1.Value)),
+                new CellRef(XlsxManager.CurrentXlsx.ActiveSheetId, XlsxManager.CurrentXlsx.FormatInput(arguments.Column2.Value, arguments.Row2.Value))
                 );
         }
     }

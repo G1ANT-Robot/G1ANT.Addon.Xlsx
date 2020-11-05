@@ -8,6 +8,7 @@
 *
 */
 using System;
+using System.Linq;
 using G1ANT.Language;
 
 namespace G1ANT.Addon.Xlsx
@@ -20,6 +21,9 @@ namespace G1ANT.Addon.Xlsx
             [Argument(Required = true, Tooltip = "Value to be searched for")]
             public TextStructure Value { get; set; } = new TextStructure("value");
 
+            [Argument(Required = true, Tooltip = "If true search the value only in selection")]
+            public BooleanStructure InSelection { get; set; } = new BooleanStructure(false);
+
             [Argument(Tooltip = "Name of a variable where the command's result (column index) will be stored")]
             public VariableStructure ResultColumn { get; set; } = new VariableStructure("resultcolumn");
             [Argument(Tooltip = "Name of a variable where the command's result (row number) will be stored")]
@@ -30,8 +34,8 @@ namespace G1ANT.Addon.Xlsx
         }
         public void Execute(Arguments arguments)
         {
-            string position = XlsxManager.CurrentXlsx.Find(arguments.Value.Value);
-
+            var result = XlsxManager.CurrentXlsx.Find(arguments.Value.Value, arguments.InSelection.Value);
+            var position = result?.FirstOrDefault();
             if (position != null)
             {
                 int[] columRowPair = XlsxManager.CurrentXlsx.FormatInput(position);
@@ -43,7 +47,6 @@ namespace G1ANT.Addon.Xlsx
                 Scripter.Variables.SetVariableValue(arguments.ResultColumn.Value, new Language.IntegerStructure("-1"));
                 Scripter.Variables.SetVariableValue(arguments.ResultRow.Value, new Language.IntegerStructure("-1"));
             }
-
         }
     }
 }
