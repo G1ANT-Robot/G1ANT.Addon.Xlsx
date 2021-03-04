@@ -38,9 +38,8 @@ namespace G1ANT.Addon.Xlsx
             var position = result?.FirstOrDefault();
             if (position != null)
             {
-                int[] columRowPair = XlsxManager.CurrentXlsx.FormatInput(position);
-                Scripter.Variables.SetVariableValue(arguments.ResultColumn.Value, new Language.IntegerStructure(columRowPair[0]));
-                Scripter.Variables.SetVariableValue(arguments.ResultRow.Value, new Language.IntegerStructure(columRowPair[1]));
+                Scripter.Variables.SetVariableValue(arguments.ResultColumn.Value, new Language.IntegerStructure(position.ColumnNumber));
+                Scripter.Variables.SetVariableValue(arguments.ResultRow.Value, new Language.IntegerStructure(position.RowNumber));
             }
             else
             {
