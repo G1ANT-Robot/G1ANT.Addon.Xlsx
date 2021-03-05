@@ -15,6 +15,12 @@ namespace G1ANT.Addon.Xlsx
     [Command(Name = "xlsx.getvalue", Tooltip = "This command gets a value of a specified cell in an .xls(x) file")]
     public class XlsxGetValueCommand : Command
     {
+        enum ResultType
+        { 
+            Text,
+            Structure
+        }
+
         public class Arguments : CommandArguments
         {
             [Argument(Required = true, Tooltip = "Cell's row number")]
@@ -28,10 +34,36 @@ namespace G1ANT.Addon.Xlsx
 
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
+
+            [Argument(Tooltip = "Type of the result, correct values: Text,Structure")]
+            public TextStructure ResultAs { get; set; } = new TextStructure(ResultType.Text.ToString());
         }
+
         public XlsxGetValueCommand(AbstractScripter scripter) : base(scripter)
         {
         }
+
+        private Structure GetCellValue(int row, string column, ResultType resultAs)
+        {
+            switch (resultAs)
+            {
+                case ResultType.Text:
+                    return new TextStructure(XlsxManager.CurrentXlsx.GetValue(row, column).ToString());
+                case ResultType.Structure:
+                    try
+                    {
+                        var val = XlsxManager.CurrentXlsx.GetValue(row, column);
+                        return Scripter.Structures.CreateStructure(val, "", val?.GetType());
+                    }
+                    catch
+                    {
+                        return new TextStructure(XlsxManager.CurrentXlsx.GetValue(row, column).ToString());
+                    }
+                default:
+                    throw new ArgumentException($"Unknown 'resultAs' argument value.");
+            }
+        }
+
         public void Execute(Arguments arguments)
         {
             object col = null;
@@ -45,8 +77,11 @@ namespace G1ANT.Addon.Xlsx
                 else
                     throw new ArgumentException("One of the ColIndex or ColName arguments have to be set up.");
 
-                var result = new TextStructure(XlsxManager.CurrentXlsx.GetValue(row, col.ToString()));
-                Scripter.Variables.SetVariableValue(arguments.Result.Value, result);
+                ResultType resultAs = ResultType.Text;
+                if (!Enum.TryParse(arguments.ResultAs.Value, true, out resultAs))
+                    throw new ArgumentException($"ResultAs is not correct value. It can be one of: {string.Join(",", Enum.GetNames(typeof(ResultType)))}");
+
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, GetCellValue(row, col.ToString(), resultAs));
             }
             catch (Exception ex)
             {

@@ -62,9 +62,9 @@ namespace G1ANT.Addon.Xlsx.Api
             ActiveSheet.Cell(row, column).Value = value;
         }
 
-        public string GetValue(int row, string column)
+        public object GetValue(int row, string column)
         {
-            return ActiveSheet.Cell(row, column).CachedValue.ToString();
+            return ActiveSheet.Cell(row, column).Value;
         }
 
         public void SelectRange(int startRow, string startColumn, int endRow, string endColumn)
@@ -166,16 +166,9 @@ namespace G1ANT.Addon.Xlsx.Api
 
         public bool Open(string filePath, string accessMode = "ReadWrite")
         {
-            try
-            {
-                workbook = new XLWorkbook(filePath);
-                ActivateSheet(GetSheetsNames()[0]);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            workbook = new XLWorkbook(filePath);
+            ActivateSheet(GetSheetsNames()[0]);
+            return ActiveSheet!=null;
         }
 
         /// <summary>
