@@ -54,7 +54,8 @@ namespace G1ANT.Addon.Xlsx.Api
 
         public int CountRows()
         {
-            return ActiveSheet.RangeUsed().RowCount();
+            var lastRow = ActiveSheet.LastRowUsed();
+            return lastRow != null ? lastRow.RowNumber() : 0;
         }
 
         public void SetValue(int row, string column, string value)
@@ -181,6 +182,10 @@ namespace G1ANT.Addon.Xlsx.Api
                 workbook.Save();
             }
             catch { }
+            finally
+            {
+                workbook.Dispose();
+            }
         }
 
         public void Save()
