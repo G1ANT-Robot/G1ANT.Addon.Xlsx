@@ -179,12 +179,13 @@ namespace G1ANT.Addon.Xlsx.Api
         {
             try
             {
-                workbook.Save();
+                workbook?.Save();
             }
             catch { }
             finally
             {
-                workbook.Dispose();
+                sheet = null;
+                workbook = null;
             }
         }
 
@@ -195,7 +196,7 @@ namespace G1ANT.Addon.Xlsx.Api
 
         public IEnumerable<IXLAddress> Find(string value, bool inSelection)
         {
-            var result = ActiveSheet.Cells().Where(x => string.Compare(x.Value.ToString(), value) == 0);
+            var result = ActiveSheet.Search(value).AsEnumerable();
             if (inSelection)
                 result = result.Where(x => SelectedCells.Contains(x));
             return result.Select(x => x.Address);
