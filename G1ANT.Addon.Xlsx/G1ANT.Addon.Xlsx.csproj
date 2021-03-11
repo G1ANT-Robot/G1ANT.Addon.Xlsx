@@ -85,6 +85,7 @@
     <Compile Include="Api\XlsxManager.cs" />
     <Compile Include="Api\XlsxWrapper.cs" />
     <Compile Include="Commands\XlsxFindAllCommand.cs" />
+    <Compile Include="Commands\XlsxGetSheetNamesCommand.cs" />
     <Compile Include="Commands\XlsxSetColorCommand.cs" />
     <Compile Include="Commands\XlsxGetColorCommand.cs" />
     <Compile Include="Commands\XlsxPasteCommand.cs" />

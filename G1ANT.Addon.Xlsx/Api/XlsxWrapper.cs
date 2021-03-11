@@ -83,20 +83,21 @@ namespace G1ANT.Addon.Xlsx.Api
 
             foreach (var row in SelectedCells.Rows())
             {
+                if (!string.IsNullOrEmpty(textValue))
+                    textValue += "\r\n";
                 textValue += string.Join("\t", row.Cells().Select(x => x.Value));
-                textValue += "\r\n";
             }
             Clipboard.SetText(textValue);
         }
 
         public void PasteFromClipboard()
         {
-            if (SelectedCells == null || SelectedCells.IsEmpty())
+            if (SelectedCells == null || !SelectedCells.Cells().Any())
             {
                 throw new ArgumentException("Attempt to paste text into null selection");
             }
 
-            SelectedCells.Value = Clipboard.GetText();
+            SelectedCells.Cells().First().Value = Clipboard.GetText();
         }
 
         public Tuple<System.Drawing.Color?, System.Drawing.Color?> GetCellColor(int row, string column)
