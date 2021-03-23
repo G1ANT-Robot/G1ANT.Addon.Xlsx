@@ -38,8 +38,7 @@ namespace G1ANT.Addon.Xlsx
             if (searchResult != null)
             {
                 var list = searchResult.
-                    Select(x => XlsxManager.CurrentXlsx.FormatInput(x)).
-                    Select(x => new PointStructure(new Point(x[0], x[1]))).ToList<object>();
+                    Select(x => new PointStructure(new Point(x.ColumnNumber, x.RowNumber))).ToList<object>();
                 result = new ListStructure(list, "", Scripter);
             }
             Scripter.Variables.SetVariableValue(arguments.Result.Value, result);

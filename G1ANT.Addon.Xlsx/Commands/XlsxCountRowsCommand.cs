@@ -27,8 +27,7 @@ namespace G1ANT.Addon.Xlsx
             try
             {
                 int res = XlsxManager.CurrentXlsx.CountRows();
-                
-                   Scripter.Variables.SetVariableValue(arguments.Result.Value, new Language.IntegerStructure(res));
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, new Language.IntegerStructure(res));
             }
             catch
             {

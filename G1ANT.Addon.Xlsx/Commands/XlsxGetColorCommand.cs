@@ -36,7 +36,7 @@ namespace G1ANT.Addon.Xlsx
 
         public void Execute(Arguments arguments)
         {
-            var colors = XlsxManager.CurrentXlsx.GetCellColor(new Api.CellRef(XlsxManager.CurrentXlsx.ActiveSheetId, arguments.Column.Value, arguments.Row.Value));
+            var colors = XlsxManager.CurrentXlsx.GetCellColor(arguments.Row.Value, arguments.Column.Value);
 
             Scripter.Variables.SetVariableValue(arguments.BgColor.Value, new ColorStructure(colors.Item1));
             Scripter.Variables.SetVariableValue(arguments.FontColor.Value, new ColorStructure(colors.Item2));
