@@ -39,14 +39,14 @@ namespace G1ANT.Addon.Xlsx
             if (arguments.BgColor != null)
             {
                 XlsxManager.CurrentXlsx.SetCellBackgroundColor(
-                    new Api.CellRef(XlsxManager.CurrentXlsx.ActiveSheetId, arguments.Column.Value, arguments.Row.Value),
+                    arguments.Row.Value, arguments.Column.Value,
                     arguments.BgColor.Value);
             }
 
             if (arguments.FontColor != null)
             {
                 XlsxManager.CurrentXlsx.SetCellFontColor(
-                    new Api.CellRef(XlsxManager.CurrentXlsx.ActiveSheetId, arguments.Column.Value, arguments.Row.Value),
+                    arguments.Row.Value, arguments.Column.Value,
                     arguments.FontColor.Value);
             }
         }
