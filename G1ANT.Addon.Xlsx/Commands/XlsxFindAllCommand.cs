@@ -24,6 +24,9 @@ namespace G1ANT.Addon.Xlsx
 
             [Argument(Required = true, Tooltip = "If true search the value only in selection")]
             public BooleanStructure InSelection { get; set; } = new BooleanStructure(false);
+            
+            [Argument(Required = true, Tooltip = "Indicates that the string comparison must ignore case")]
+            public BooleanStructure IgnoreCase { get; set; } = new BooleanStructure(false);
 
             [Argument(Tooltip = "Name of a variable where the command's result (list of points) will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
@@ -34,7 +37,7 @@ namespace G1ANT.Addon.Xlsx
         public void Execute(Arguments arguments)
         {
             ListStructure result = new ListStructure(null, "", Scripter);
-            var searchResult = XlsxManager.CurrentXlsx.Find(arguments.Value.Value, arguments.InSelection.Value);
+            var searchResult = XlsxManager.CurrentXlsx.Find(arguments.Value.Value, arguments.InSelection.Value, arguments.IgnoreCase.Value);
             if (searchResult != null)
             {
                 var list = searchResult.

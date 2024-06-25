@@ -10,6 +10,7 @@
 using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
@@ -195,9 +196,12 @@ namespace G1ANT.Addon.Xlsx.Api
             workbook.Save();
         }
 
-        public IEnumerable<IXLAddress> Find(string value, bool inSelection)
+        public IEnumerable<IXLAddress> Find(string value, bool inSelection, bool ignoreCase = false)
         {
-            var result = ActiveSheet.Search(value).AsEnumerable();
+            var compareOptions = CompareOptions.None;
+            if (ignoreCase)
+                compareOptions |= CompareOptions.IgnoreCase;
+            var result = ActiveSheet.Search(value, compareOptions).AsEnumerable();
             if (inSelection)
                 result = result.Where(x => SelectedCells.Contains(x));
             return result.Select(x => x.Address);
