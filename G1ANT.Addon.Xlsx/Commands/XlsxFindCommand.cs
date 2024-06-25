@@ -24,8 +24,12 @@ namespace G1ANT.Addon.Xlsx
             [Argument(Required = true, Tooltip = "If true search the value only in selection")]
             public BooleanStructure InSelection { get; set; } = new BooleanStructure(false);
 
+            [Argument(Required = true, Tooltip = "Indicates that the string comparison must ignore case")]
+            public BooleanStructure IgnoreCase { get; set; } = new BooleanStructure(false);
+
             [Argument(Tooltip = "Name of a variable where the command's result (column index) will be stored")]
             public VariableStructure ResultColumn { get; set; } = new VariableStructure("resultcolumn");
+
             [Argument(Tooltip = "Name of a variable where the command's result (row number) will be stored")]
             public VariableStructure ResultRow { get; set; } = new VariableStructure("resultrow");
         }
@@ -34,7 +38,7 @@ namespace G1ANT.Addon.Xlsx
         }
         public void Execute(Arguments arguments)
         {
-            var result = XlsxManager.CurrentXlsx.Find(arguments.Value.Value, arguments.InSelection.Value);
+            var result = XlsxManager.CurrentXlsx.Find(arguments.Value.Value, arguments.InSelection.Value, arguments.IgnoreCase.Value);
             var position = result?.FirstOrDefault();
             if (position != null)
             {
