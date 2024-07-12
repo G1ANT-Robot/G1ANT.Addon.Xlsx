@@ -59,9 +59,23 @@ namespace G1ANT.Addon.Xlsx.Api
             return lastRow != null ? lastRow.RowNumber() : 0;
         }
 
-        public void SetValue(int row, string column, string value)
+        private XLDataType? StringToCellType(object value, string type)
         {
-            ActiveSheet.Cell(row, column).Value = value;
+            if (string.IsNullOrEmpty(type))
+                return null;
+
+            if (Enum.TryParse<XLDataType>(type, true, out var cellType))
+                return cellType;
+            return null;
+        }
+
+        public void SetValue(int row, string column, object value, string type = null)
+        {
+            var cell = ActiveSheet.Cell(row, column);
+            cell.SetValue(value);
+            var cellType = StringToCellType(value, type);
+            if (cellType.HasValue)
+                cell.SetDataType(cellType.Value);
         }
 
         public object GetValue(int row, string column)
