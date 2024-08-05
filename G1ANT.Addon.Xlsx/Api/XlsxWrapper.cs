@@ -10,6 +10,7 @@
 using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
@@ -58,9 +59,23 @@ namespace G1ANT.Addon.Xlsx.Api
             return lastRow != null ? lastRow.RowNumber() : 0;
         }
 
-        public void SetValue(int row, string column, string value)
+        private XLDataType? StringToCellType(object value, string type)
         {
-            ActiveSheet.Cell(row, column).Value = value;
+            if (string.IsNullOrEmpty(type))
+                return null;
+
+            if (Enum.TryParse<XLDataType>(type, true, out var cellType))
+                return cellType;
+            return null;
+        }
+
+        public void SetValue(int row, string column, object value, string type = null)
+        {
+            var cell = ActiveSheet.Cell(row, column);
+            cell.SetValue(value);
+            var cellType = StringToCellType(value, type);
+            if (cellType.HasValue)
+                cell.SetDataType(cellType.Value);
         }
 
         public object GetValue(int row, string column)
@@ -195,9 +210,12 @@ namespace G1ANT.Addon.Xlsx.Api
             workbook.Save();
         }
 
-        public IEnumerable<IXLAddress> Find(string value, bool inSelection)
+        public IEnumerable<IXLAddress> Find(string value, bool inSelection, bool ignoreCase = false)
         {
-            var result = ActiveSheet.Search(value).AsEnumerable();
+            var compareOptions = CompareOptions.None;
+            if (ignoreCase)
+                compareOptions |= CompareOptions.IgnoreCase;
+            var result = ActiveSheet.Search(value, compareOptions).AsEnumerable();
             if (inSelection)
                 result = result.Where(x => SelectedCells.Contains(x));
             return result.Select(x => x.Address);
