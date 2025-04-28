@@ -94,6 +94,7 @@
     <Compile Include="Commands\XlsxCountRowsCommand.cs" />
     <Compile Include="Commands\XlsxFindCommand.cs" />
     <Compile Include="Commands\XlsxCopyCommand.cs" />
+    <Compile Include="Commands\XlsxSetColumnWidthCommand.cs" />
     <Compile Include="Commands\XlsxSetValueCommand.cs" />
     <Compile Include="Commands\XlsxGetValueCommand.cs" />
     <Compile Include="Commands\XlsxOpenCommand.cs" />
