@@ -8,6 +8,7 @@
 *
 */
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -67,6 +68,17 @@ namespace G1ANT.Addon.Xlsx.Api
             if (Enum.TryParse<XLDataType>(type, true, out var cellType))
                 return cellType;
             return null;
+        }
+
+        public void SetColumnWidth(string column, int? width = null, bool adjustToContent = false)
+        {
+            var col = ActiveSheet.Column(column);
+            if (adjustToContent)
+                col.AdjustToContents();
+            else if (width.HasValue)
+                col.Width = width.Value;
+            else
+                throw new ApplicationException("width or adjustToContent must be provided.");
         }
 
         public void SetValue(int row, string column, object value, string type = null)
